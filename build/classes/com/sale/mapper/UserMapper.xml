@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.sale.mapper.UserMapper">
+ 	<select id="loginck" resultType="user">
+ 		select * from tb_user where u_acount = #{username} and u_pwd = #{password}
+ 	</select>
+ 	<select id="findById" resultType="user">
+ 		select * from tb_user where u_id = #{u_id}
+ 	</select>
+ 	
+ 	<update id="updateOne" parameterType="user">
+ 		update tb_user set 
+ 		u_name = #{u_name},	
+ 		u_phone = #{u_phone}
+ 		where u_id = #{u_id}
+ 	</update>
+ 	
+ 	<update id="updatePwd">
+ 		update tb_user set u_pwd = #{u_pwd} where u_id = #{u_id}
+ 	</update>
+ 	
+ 	<update id="adminUpdateOne">
+ 		update tb_user
+ 		<set>
+ 		u_name = #{u_name},
+ 		u_phone = #{u_phone},
+ 		<if test="u_acount!=null and u_acount != ''">
+ 			u_acount = #{u_acount},
+ 		</if>
+ 		<if test="u_pwd !=null and u_pwd != ''">
+ 			u_pwd = #{u_pwd},
+ 		</if>
+ 		</set>
+ 		where u_id = #{u_id}
+ 	</update>
+ 	
+ 	<select id="countAllUser" resultType="int">
+ 		select count(*) from tb_user 
+ 		<where>
+ 			<if test="map.u_name!=null and map.u_name!=''">
+ 				u_name like '%${map.u_name}%'
+ 			</if>
+ 			<if test="map.u_level!=null and map.u_level!=''">
+ 				and u_level = #{map.u_level}
+ 			</if>
+ 			<if test="map.u_phone!=null and map.u_phone!=''">
+ 				and u_phone = #{map.u_phone}
+ 			</if>
+ 		</where>
+ 		order by u_id desc
+ 	</select>
+ 	
+ 	<select id="findAllUser" resultType="user">
+ 		select * from tb_user
+ 		<where>
+ 			<if test="map.u_name!=null and map.u_name!=''">
+ 				u_name like '%${map.u_name}%'
+ 			</if>
+ 			<if test="map.u_level!=null and map.u_level!=''">
+ 				and u_level = #{map.u_level}
+ 			</if>
+ 			<if test="map.u_phone!=null and map.u_phone!=''">
+ 				and u_phone = #{map.u_phone}
+ 			</if>
+ 		</where>
+ 		order by u_id desc limit #{start},#{size}
+ 	</select>
+ 	<insert id="insertOne" parameterType="user">
+ 		insert into tb_user(u_name,u_acount,u_pwd,u_level,u_phone) 
+ 		values(#{u_name},#{u_acount},#{u_pwd},#{u_level},#{u_phone})
+ 	</insert>
+ 	
+ 	<delete id="adminDeleteOne">
+ 		delete from tb_user where u_id = #{u_id}
+ 	</delete>
+ </mapper>

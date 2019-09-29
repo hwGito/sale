@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sale.mapper.GoodsMapper">
+	<select id="countAll" resultType="int">
+		select count(*) from tb_goods
+		<where>
+			<if test="map.g_name!= null and map.g_name!=''">
+				g_name like '%${map.g_name}%'
+			</if>
+			<if test="map.g_number != null and map.g_number!=''">
+				and g_number like '%${map.g_number}%'
+			</if>
+			<if test="map.g_status !=null and map.g_status!=''">
+				and g_status = #{map.g_status}
+			</if>
+			<if test="map.g_intime !=null and map.g_intime!=''">
+				and g_intime &gt;= #{map.g_intime}
+			</if>
+			<if test="map.g_intime_end !=null and map.g_intime_end !=''">
+				and g_intime &lt; #{map.g_intime_end}
+			</if>
+		</where>
+		order by g_id desc
+	</select>
+	
+	<select id="findAll" resultType="goods">
+		select * from tb_goods
+		<where>
+			<if test="map.g_name!= null and map.g_name!=''">
+				g_name like '%${map.g_name}%'
+			</if>
+			<if test="map.g_number != null and map.g_number!=''">
+				and g_number like '%${map.g_number}%'
+			</if>
+			<if test="map.g_status !=null and map.g_status!=''">
+				and g_status = #{map.g_status}
+			</if>
+			<if test="map.g_intime !=null and map.g_intime!=''">
+				and g_intime &gt;= #{map.g_intime}
+			</if>
+			<if test="map.g_intime_end !=null and map.g_intime_end !=''">
+				and g_intime &lt; #{map.g_intime_end}
+			</if>
+		</where>
+		order by g_id desc limit #{start},#{size}
+	</select>
+	
+	<select id="findById" resultType="goods">
+		select * from tb_goods where g_id = #{g_id}
+	</select>	
+	
+	<insert id="insertOne" parameterType="goods">
+		insert into tb_goods(g_name,g_number,g_desc,g_price,g_intime,g_inprice,g_status,g_count) 
+		values(#{g_name},#{g_number},#{g_desc},#{g_price},#{g_intime},#{g_inprice},#{g_status},#{g_count})
+	</insert>
+	
+	<update id="updateOne" parameterType="goods">
+		update tb_goods set g_name = #{g_name},g_number = #{g_number},g_desc = #{g_desc},g_price = #{g_price},
+		g_intime = #{g_intime},g_inprice = #{g_inprice},g_status = #{g_status},g_count = #{g_count} where g_id = #{g_id}
+	</update>
+	
+	<delete id="deleteOne" >
+		delete from tb_goods where g_id = #{g_id}
+	</delete>
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.sale.mapper.BillMapper">
+ 	
+ 	<select id="findAll" resultType="bill">
+ 		select * from tb_bill 
+ 		<where> 
+	 		<if test="map.b_status!=null and map.b_status!=''">
+	 			b_status = #{map.b_status}
+	 		</if>
+	 		<if test="map.c_name!=null and map.c_name!=''">
+	 			and c_name = #{map.c_name}
+	 		</if>
+	 		<if test="map.b_time!=null and map.b_time">
+	 			and b_time &gt;= #{map.b_time} 
+	 		</if>
+	 		<if test="map.b_time_end !=null and map.b_time_end !=''">
+	 			and b_time &lt; #{map.b_time_end}
+	 		</if>
+	 		<if test="map.u_name!=null and map.u_name!=''">
+	 			and u_name = #{map.u_name}
+	 		</if>
+	 		<if test="map.c_plate!=null and map.c_plate!=''">
+	 			and c_plate = #{map.c_plate} 
+	 		</if>
+ 		</where>
+ 		order by b_id desc limit #{start},#{size}
+ 	</select>
+ 	
+ 	<select id="countAll" resultType="int">
+ 		select count(*) from tb_bill 
+ 		<where> 
+	 		<if test="map.b_status!=null and map.b_status!=''">
+	 			b_status = #{map.b_status}
+	 		</if>
+	 		<if test="map.c_name!=null and map.c_name!=''">
+	 			and c_name = #{map.c_name}
+	 		</if>
+	 		<if test="map.b_time!=null and map.b_time">
+	 			and b_time &gt;= #{map.b_time} 
+	 		</if>
+	 		<if test="map.b_time_end !=null and map.b_time_end !=''">
+	 			and b_time &lt; #{map.b_time_end}
+	 		</if>
+	 		<if test="map.u_name!=null and map.u_name!=''">
+	 			and u_name = #{map.u_name}
+	 		</if>
+	 		<if test="map.c_plate!=null and map.c_plate!=''">
+	 			and c_plate = #{map.c_plate} 
+	 		</if>
+ 		</where>
+ 		order by b_id desc
+ 	</select>
+ 	<select id="findById" resultType="bill">
+ 		select * from tb_bill where b_id = #{b_id}
+ 	</select>
+ 	<select id="findPriceById" resultType="double">
+ 		select g_price from tb_goods where g_id = #{g_id}
+ 	</select>
+ 	<insert id="insertOne" parameterType="bill">
+ 		insert into tb_bill(b_number,b_time,c_name,c_phone,c_plate,b_status,u_name,b_payway,b_total,b_real
+ 		<if test="c_add !=null and c_add !=''">,c_add</if>) 
+ 		values(#{b_number},#{b_time},#{c_name},#{c_phone},#{c_plate},#{b_status},#{u_name},#{b_payway},#{b_total},#{b_real}
+ 		<if test="c_add !=null and c_add !=''">,#{c_add}</if>)
+ 	</insert>
+ 	<update id="updateOne" parameterType="bill">
+ 		update tb_bill 
+ 		<set>
+ 		c_name = #{c_name},c_phone=#{c_phone},c_plate=#{c_plate},b_status=#{b_status},b_payway=#{b_payway},
+ 		b_real = #{b_real},b_total = #{b_total}
+ 		<if test="c_add !=null and c_add!=''">
+ 			,c_add = #{c_add}
+ 		</if>
+ 		</set>
+ 		where b_id = #{b_id}
+ 	</update>
+ 	<delete id="deleteOne">
+ 		delete from tb_bill where b_number=#{b_number}
+ 	</delete>
+ 	<delete id="deleteBillEx">
+ 		delete from tb_goods_bill where b_number = #{b_number}
+ 	</delete>
+ 	<delete id="deleteById">
+ 		delete from tb_bill where b_id = #{b_id}
+ 	</delete>
+ 	<select id="findGoodslist" resultType="goodsUnio">
+ 		select g.*,gb.gb_count from tb_goods_bill as gb,tb_goods as g where b_number = #{b_number} and gb.g_id = g.g_id;
+ 	</select>
+ 	<insert id="insertBillEx">
+ 		insert into tb_goods_bill(b_number,g_id,gb_count) values
+ 		<foreach collection="list" item="item" index="index" separator=",">
+ 		(#{item.b_number},#{item.g_id},#{item.gb_count})
+ 		</foreach>
+ 	</insert>
+
+ </mapper>

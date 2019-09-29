@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.sale.mapper.TipMapper">
+ 	<resultMap type="com.sale.pojo.Tip" id="tip">
+ 		<id column="t_id" jdbcType="INTEGER" property="id"/>
+ 		<result column="t_message" jdbcType="VARCHAR" property="message"/>
+ 	</resultMap>
+ 	<select id="getTip" resultMap="tip">
+ 		select * from tb_tips
+ 	</select>
+ 	<update id="updateOne">
+ 		update tb_tips 
+ 		<set>
+ 			t_message = #{message}
+ 		</set>
+ 	</update>
+ </mapper>
